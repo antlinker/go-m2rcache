@@ -13,6 +13,12 @@ func createRedisDB(rc RedisCfg) *redisDB {
 	return r
 }
 
+// RedisDB redis数据库
+type RedisDB interface {
+	Save(key string, cacheTime time.Duration, field, value string, pairs ...string)
+	Get(key string, field ...string) ([]interface{}, error)
+}
+
 // RedisCfg redis配置
 type RedisCfg struct {
 	// Password 密码
@@ -89,18 +95,18 @@ func (r *redisDB) initDB(rc RedisCfg) error {
 	r.client = client
 	return nil
 }
-func (r *redisDB) save(key string, cacheTime time.Duration, field, value string, pairs ...string) {
+func (r *redisDB) Save(key string, cacheTime time.Duration, field, value string, pairs ...string) {
 	r.client.HMSet(key, field, value, pairs...)
-	fmt.Println("cachetime:", cacheTime)
+	//	fmt.Println("cachetime:", cacheTime)
 	if cacheTime > 0 {
 
 		r.client.Expire(key, cacheTime)
 	}
 }
-func (r *redisDB) get(key string, field ...string) ([]interface{}, error) {
-	fmt.Printf("redis(%s):%v\n", key, field)
+func (r *redisDB) Get(key string, field ...string) ([]interface{}, error) {
+	//fmt.Printf("redis(%s):%v\n", key, field)
 	rs := r.client.HMGet(key, field...)
-	fmt.Printf("redis(%s):%v  err:%v\n", key, rs.Val(), rs.Err())
+	//fmt.Printf("redis(%s):%v  err:%v\n", key, rs.Val(), rs.Err())
 	return rs.Result()
 
 }

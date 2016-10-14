@@ -1,27 +1,17 @@
 package m2rcache
 
-import "time"
-
 type nameSpace struct {
 	cacherMap map[string]Cacher
-	mgoDB     *mgoDB
-	redisDB   *redisDB
-	cacheTime time.Duration
+	mgoDB     MgoDB
+	redisDB   RedisDB
 }
 
 func (f *nameSpace) RegNameSpace(namespace string, build Builder) Cacher {
-	return f.RegNameSpaceForCacheTime(namespace, build, -1)
-}
-func (f *nameSpace) RegNameSpaceForCacheTime(namespace string, build Builder, cacheTime time.Duration) Cacher {
-	if cacheTime == -1 {
 
-		cacheTime = f.cacheTime
-	}
 	var bc = &baseCache{
-		mgoDB:     f.mgoDB,
-		redisDB:   f.redisDB,
-		build:     build,
-		cacheTime: cacheTime,
+		mgoDB:   f.mgoDB,
+		redisDB: f.redisDB,
+		build:   build,
 	}
 	if f.cacherMap == nil {
 		f.cacherMap = make(map[string]Cacher)

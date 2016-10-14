@@ -7,7 +7,8 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-func createMgoDB(cfg MgoCfg) *mgoDB {
+// CreateMgoDB db
+func CreateMgoDB(cfg MgoCfg) MgoDB {
 	var m = &mgoDB{}
 	m.initDB(cfg)
 	return m

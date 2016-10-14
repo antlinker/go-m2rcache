@@ -1,7 +1,5 @@
 package m2rcache
 
-import "time"
-
 // Cacher 缓存接口
 type Cacher interface {
 	// 获取一个缓存值
@@ -15,9 +13,6 @@ type Cacher interface {
 type NameSpacer interface {
 	// 注册一个命名空间
 	RegNameSpace(namespace string, build Builder) Cacher
-	// 注册带有缓存时间的命名空间
-	// cacheTime -1继承整体缓存设置　0 不缓存
-	RegNameSpaceForCacheTime(namespace string, build Builder, cacheTime time.Duration) Cacher
 	// 移除一个命名空间
 	RemoveNameSpace(namespace string) Cacher
 	// 获取一个命名空间
@@ -37,7 +32,7 @@ type Factory interface {
 }
 
 // LoadDataHandler 加载数据方法
-type LoadDataHandler func(db MgoDB, id interface{}, fields ...string) ([]interface{}, error)
+//type LoadDataHandler func(db MgoDB, id interface{}, fields ...string) ([]interface{}, error)
 
 // Builder 缓存创建者
 // 用来构建缓存数据来源及缓存键名
@@ -45,6 +40,6 @@ type Builder interface {
 	// 缓存键生成器
 	// id 缓存唯一标识
 	Key(id interface{}) string
-	// 数据加载函数句柄
-	Handler() LoadDataHandler
+
+	LoadData(mdb MgoDB, rdb RedisDB, id interface{}, fields ...string) ([]interface{}, error)
 }
